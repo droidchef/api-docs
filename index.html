@@ -1,1 +1,1402 @@
-Test Page
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Mifos X API Documentation</title>
+
+    <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+      <script src="javascripts/all.js" type="text/javascript"></script>
+
+      <script>
+        $(function() {
+          setupLanguages(["shell"]);
+        });
+      </script>
+  </head>
+
+  <body class="index">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo.jpg" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="shell">shell</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        
+          <h1 id="overview">Overview</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Mifos X is a secure, multi-tenanted microfinance platform.</p>
+
+<p>The goal of the Mifos X API is to empower developers to build apps on top of the Mifos X Platform. The <a href="https://demo.openmf.org">reference app</a> (username: mifos, password: password) works on the same demo &lsquo;tenant&rsquo; as the interactive links in this documentation.</p>
+
+<p>The API is organized around <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a>.</p>
+
+<p>The API is designed to have:</p>
+
+<ul>
+<li>predictable, resource-oriented URLs</li>
+<li>to use HTTP response codes to indicate API errors</li>
+<li>to use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients.</li>
+</ul>
+
+<p><a href="http://www.json.org/">JSON</a> is returned in all responses from the API, including errors.</p>
+
+<p>Much of the API presentation and design ideas are owed to the excellent <a href="http://info.apigee.com/Portals/62317/docs/web%20api.pdf">Apigee &ldquo;Web API Design&rdquo; eBook/PDF</a> and the very good <a href="https://stripe.com/docs/api">Stripe API reference</a>.</p>
+
+<h2 id="try-api-from-your-browser">Try API From Your Browser</h2>
+
+<p>Try The API From Your Browser
+GET (read) examples can be run directly from this documentation. It is just a matter of clicking a link. Most browsers display the output on the same page (or another tab if you right click and select that option). Internet Explorer will probably treat the output as if you wanted to download a file. In that case just elect to open the output in a text editor.</p>
+
+<p>If you want to check out the POST, PUT and DELETE (update) examples a good approach is to take a moment to install a REST plugin for your browser e.g.</p>
+
+<ul>
+<li><a href="https://addons.mozilla.org/en-US/firefox/addon/restclient/">RESTClient</a> for Mozilla FireFox</li>
+<li><a href="https://chrome.google.com/webstore/detail/postman-rest-client-packa/fhbjgbiflinjbdggehcddcbncdddomop">Postman</a> for Google Chrome</li>
+</ul>
+
+<p>The REST plugins will allow you to</p>
+
+<ul>
+<li>Select the &ldquo;Verb&rdquo; (e.g. POST)</li>
+<li>Enter the resource name (e.g. offices)</li>
+<li>Add a header to indicate you are sending JSON data as part of the request body (Content-Type: application/json)</li>
+<li>Add a header to indicate your &#39;tenant&rsquo; (X-Mifos-Platform-TenantId: default)</li>
+<li>Paste the example JSON into a Request Body</li>
+<li>Send the Request (and receive a Response)</li>
+</ul>
+
+<h2 id="generic-options">Generic Options</h2>
+
+<h3 id="convenience-templates">Convenience Templates</h3>
+
+<p>There are a list of convenience resources (see Template menu option). These resources end with &ldquo;/template&rdquo; and can be useful when building maintenance user interface screens for client applications. The template data returned may consist of any or all of:</p>
+
+<ul>
+<li>Field Defaults</li>
+<li>Allowed Value Lists</li>
+</ul>
+
+<p>Also, many &ldquo;Retrieve a&rdquo; type resources (Retrieve a Client for example) allow the parameter option &ldquo;template=true&rdquo;. This appends any &ldquo;Allowed Value Lists&rdquo; which can be useful when building update functionality.</p>
+
+<h3 id="restrict-returned-fields">Restrict Returned Fields</h3>
+
+<p>Parameter &ldquo;fields={fieldlist}&rdquo; can be used on GET requests to restrict the fields returned.</p>
+
+<p>Normal Request:</p>
+
+<p><a href="https://demo.openmf.org/mifosng-provider/api/v1/offices/1?tenantIdentifier=default">offices/1</a></p>
+
+<p>Request (restricting fields returned):</p>
+
+<p><a href="https://demo.openmf.org/mifosng-provider/api/v1/offices/1?fields=id,name&amp;tenantIdentifier=default">offices/1?fields=id,name</a></p>
+
+<h3 id="pretty-json-formatting">Pretty JSON Formatting</h3>
+
+<p>Parameter &ldquo;pretty=true&rdquo; can be used to display JSON from GET requests in an easy-to-read format. This parameter is used in this documentation.</p>
+
+<p>Easy-to-read JSON output for POSTs, PUTs and DELETEs will available in the REST plugin you use e.g. RESTClient for FireFox</p>
+
+<p>Normal Request (with pretty printing/formatting):</p>
+
+<p><a href="https://demo.openmf.org/mifosng-provider/api/v1/offices/1?pretty=true&amp;tenantIdentifier=default">offices/1?pretty=true</a></p>
+
+<h3 id="creating-and-updating">Creating and Updating</h3>
+
+<p>When you want to &#39;Create a &hellip;&rsquo; you have to at least supply the mandatory fields. The mandatory fields are listed in this documentation under the relevant &#39;Create a &hellip;&rsquo; heading.</p>
+
+<p>When you want to &#39;Update a &hellip;&rsquo; you can update individual fields or a combination of fields (subject to data integrity rules).</p>
+
+<h3 id="updating-dates-and-numbers">Updating Dates and Numbers</h3>
+
+<blockquote>
+<p>JSON examples for Dates:</p>
+</blockquote>
+<pre><code class="highlight shell"><span class="o">{</span>
+    <span class="s2">"locale"</span>: <span class="s2">"en_US"</span>,
+    <span class="s2">"dateFormat"</span>: <span class="s2">"dd MMMM yyyy"</span>,
+    <span class="s2">"openingDate"</span>: <span class="s2">"01 July 2007"</span>
+<span class="o">}</span>
+
+<span class="o">{</span>
+    <span class="s2">"locale"</span>: <span class="s2">"en_US"</span>,
+    <span class="s2">"dateFormat"</span>: <span class="s2">"yyyy-MM-dd"</span>,
+    <span class="s2">"openingDate"</span>: <span class="s2">"2007-03-21"</span>
+<span class="o">}</span>
+</code></pre>
+
+<p><strong>Dates</strong></p>
+
+<p>Dates are returned in GET requests as an array e.g. [ 2007, 4, 11]. However, the API accepts them as strings in POST and PUT requests. If there are any dates in your POST or PUT requests, you need to provide the &ldquo;locale&rdquo; and &ldquo;dateFormat&rdquo;. This can be any date pattern supported by <a href="http://joda-time.sourceforge.net/api-release/org/joda/time/format/DateTimeFormat.html">Joda-Time</a>. This capability can help you when saving data in your client application as you shouldn&rsquo;t need to do any date format conversion prior to issuing your POST or PUT request.</p>
+
+<p><br><br><br><br><br><br><br><br></p>
+
+<blockquote>
+<p>JSON examples for Numbers:</p>
+</blockquote>
+<pre><code class="highlight shell"><span class="o">{</span>
+    <span class="s2">"locale"</span>: <span class="s2">"en_US"</span>,
+    <span class="s2">"principal"</span>: <span class="s2">"240,400.88"</span>
+<span class="o">}</span>
+<span class="o">{</span>
+    <span class="s2">"locale"</span>: <span class="s2">"fr_CH"</span>,
+    <span class="s2">"principal"</span>: <span class="s2">"240 400.88"</span>
+<span class="o">}</span>
+</code></pre>
+
+<p><strong>Numbers</strong></p>
+
+<p>You must provide a &ldquo;locale&rdquo; when updating numbers. Numbers are not &ldquo;Ids&rdquo; or &ldquo;Types&rdquo; but are typically money amounts or percentages that relate to loans. In any case, the API will send back an error message if you forget.</p>
+
+<p><br><br><br><br><br><br><br><br><br><br></p>
+
+<h3 id="field-descriptions">Field Descriptions</h3>
+
+<p>Most fields are self-explanatory. Fields that aren&rsquo;t are described under the relevant resource heading e.g. AUTHENTICATION</p>
+
+<h3 id="authentication-overview">Authentication Overview</h3>
+
+<p>Authentication to the API occurs via <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">HTTP Basic Auth</a>.</p>
+
+<p>The platform has been configured to reject plain HTTP requests and to expect all API requests to be made over <a href="http://en.wikipedia.org/wiki/HTTP_Secure">HTTPS</a>. All requests must be authenticated.</p>
+
+<h2 id="batch-api">Batch API</h2>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="highlight shell"><span class="o">[</span>
+   <span class="o">{</span>
+      <span class="s2">"requestId"</span>:1,
+      <span class="s2">"relativeUrl"</span>:<span class="s2">"clients"</span>,
+      <span class="s2">"method"</span>:<span class="s2">"POST"</span>,
+      <span class="s2">"headers"</span>:[
+         <span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+            <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+         <span class="o">}</span>
+      <span class="o">]</span>,
+      <span class="s2">"body"</span>:<span class="s2">"{
+        </span><span class="se">\"</span><span class="s2">officeId</span><span class="se">\"</span><span class="s2">: 1,
+        </span><span class="se">\"</span><span class="s2">firstname</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">Petra</span><span class="se">\"</span><span class="s2">,
+        </span><span class="se">\"</span><span class="s2">lastname</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">Yton</span><span class="se">\"</span><span class="s2">,
+        </span><span class="se">\"</span><span class="s2">externalId</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">ex_externalId1</span><span class="se">\"</span><span class="s2">,
+        </span><span class="se">\"</span><span class="s2">dateFormat</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">dd MMMM yyyy</span><span class="se">\"</span><span class="s2">,
+        </span><span class="se">\"</span><span class="s2">locale</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">en</span><span class="se">\"</span><span class="s2">,
+        </span><span class="se">\"</span><span class="s2">active</span><span class="se">\"</span><span class="s2">: true,
+        </span><span class="se">\"</span><span class="s2">activationDate</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">04 March 2009</span><span class="se">\"</span><span class="s2">,
+        </span><span class="se">\"</span><span class="s2">submittedOnDate</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">04 March 2009</span><span class="se">\"</span><span class="s2">
+     }"</span>
+   <span class="o">}</span>,
+   <span class="o">{</span>
+      <span class="s2">"requestId"</span>:2,
+      <span class="s2">"relativeUrl"</span>:<span class="s2">"loans"</span>,
+      <span class="s2">"method"</span>:<span class="s2">"POST"</span>,
+      <span class="s2">"headers"</span>:[
+         <span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+            <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+         <span class="o">}</span>
+      <span class="o">]</span>,
+      <span class="s2">"reference"</span>:1,
+      <span class="s2">"body"</span>:<span class="s2">"{ </span><span class="se">\"</span><span class="s2">dateFormat</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">dd MMMM yyyy</span><span class="se">\"</span><span class="s2">,
+                </span><span class="se">\"</span><span class="s2">locale</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">en_GB</span><span class="se">\"</span><span class="s2">,
+                </span><span class="se">\"</span><span class="s2">clientId</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="nv">$.</span><span class="s2">clientId</span><span class="se">\"</span><span class="s2">,
+                </span><span class="se">\"</span><span class="s2">productId</span><span class="se">\"</span><span class="s2">: 26,
+                </span><span class="se">\"</span><span class="s2">principal</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">10,000.00</span><span class="se">\"</span><span class="s2">,
+                </span><span class="se">\"</span><span class="s2">loanTermFrequency</span><span class="se">\"</span><span class="s2">: 12,
+                </span><span class="se">\"</span><span class="s2">loanTermFrequencyType</span><span class="se">\"</span><span class="s2">: 2,
+                </span><span class="se">\"</span><span class="s2">loanType</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">individual</span><span class="se">\"</span><span class="s2">,
+                </span><span class="se">\"</span><span class="s2">numberOfRepayments</span><span class="se">\"</span><span class="s2">: 10,
+                </span><span class="se">\"</span><span class="s2">repaymentEvery</span><span class="se">\"</span><span class="s2">: 1,
+                </span><span class="se">\"</span><span class="s2">repaymentFrequencyType</span><span class="se">\"</span><span class="s2">: 2,
+                </span><span class="se">\"</span><span class="s2">interestRatePerPeriod</span><span class="se">\"</span><span class="s2">: 10,
+                </span><span class="se">\"</span><span class="s2">amortizationType</span><span class="se">\"</span><span class="s2">: 1,
+                </span><span class="se">\"</span><span class="s2">interestType</span><span class="se">\"</span><span class="s2">: 0,
+                </span><span class="se">\"</span><span class="s2">interestCalculationPeriodType</span><span class="se">\"</span><span class="s2">: 1,
+                </span><span class="se">\"</span><span class="s2">transactionProcessingStrategyId</span><span class="se">\"</span><span class="s2">: 1,
+                </span><span class="se">\"</span><span class="s2">expectedDisbursementDate</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">10 Jun 2013</span><span class="se">\"</span><span class="s2">,
+                </span><span class="se">\"</span><span class="s2">submittedOnDate</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">10 Jun 2013</span><span class="se">\"</span><span class="s2">
+              }"</span>
+   <span class="o">}</span>,
+   <span class="o">{</span>
+      <span class="s2">"requestId"</span>:3,
+      <span class="s2">"relativeUrl"</span>:<span class="s2">"loans/</span><span class="nv">$.</span><span class="s2">loanId/charges"</span>,
+      <span class="s2">"method"</span>:<span class="s2">"POST"</span>,
+      <span class="s2">"reference"</span>:2,
+      <span class="s2">"headers"</span>:[
+         <span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+            <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+         <span class="o">}</span>
+      <span class="o">]</span>,
+      <span class="s2">"body"</span>:<span class="s2">"{
+              </span><span class="se">\"</span><span class="s2">chargeId</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">2</span><span class="se">\"</span><span class="s2">,
+              </span><span class="se">\"</span><span class="s2">locale</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">en</span><span class="se">\"</span><span class="s2">,
+              </span><span class="se">\"</span><span class="s2">amount</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">100</span><span class="se">\"</span><span class="s2">,
+              </span><span class="se">\"</span><span class="s2">dateFormat</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">dd MMMM yyyy</span><span class="se">\"</span><span class="s2">,
+              </span><span class="se">\"</span><span class="s2">dueDate</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">29 April 2013</span><span class="se">\"</span><span class="s2">
+            }"</span>
+   <span class="o">}</span>,
+   <span class="o">{</span>
+      <span class="s2">"requestId"</span>:4,
+      <span class="s2">"relativeUrl"</span>:<span class="s2">"loans/</span><span class="nv">$.</span><span class="s2">loanId/charges"</span>,
+      <span class="s2">"method"</span>:<span class="s2">"GET"</span>,
+      <span class="s2">"reference"</span>:2,
+      <span class="s2">"headers"</span>:[
+         <span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+            <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+         <span class="o">}</span>
+      <span class="o">]</span>,
+      <span class="s2">"body"</span>:<span class="s2">"{}"</span>
+   <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre><code class="highlight shell"><span class="o">[</span>
+   <span class="o">{</span>
+      <span class="s2">"requestId"</span>:1,
+      <span class="s2">"statusCode"</span>:200,
+      <span class="s2">"headers"</span>:[
+         <span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+            <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+         <span class="o">}</span>,
+         <span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="s2">"X-Mifos-Platform-TenantId"</span>,
+            <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+         <span class="o">}</span>
+      <span class="o">]</span>,
+      <span class="s2">"body"</span>:<span class="s2">"{</span><span class="se">\"</span><span class="s2">officeId</span><span class="se">\"</span><span class="s2">:1,</span><span class="se">\"</span><span class="s2">clientId</span><span class="se">\"</span><span class="s2">:909,</span><span class="se">\"</span><span class="s2">resourceId</span><span class="se">\"</span><span class="s2">:909}"</span>
+   <span class="o">}</span>,
+   <span class="o">{</span>
+      <span class="s2">"requestId"</span>:2,
+      <span class="s2">"statusCode"</span>:200,
+      <span class="s2">"headers"</span>:[
+         <span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+            <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+         <span class="o">}</span>
+      <span class="o">]</span>,
+      <span class="s2">"body"</span>:<span class="s2">"{</span><span class="se">\"</span><span class="s2">officeId</span><span class="se">\"</span><span class="s2">:1,</span><span class="se">\"</span><span class="s2">clientId</span><span class="se">\"</span><span class="s2">:909,</span><span class="se">\"</span><span class="s2">loanId</span><span class="se">\"</span><span class="s2">:212,</span><span class="se">\"</span><span class="s2">resourceId</span><span class="se">\"</span><span class="s2">:212}"</span>
+   <span class="o">}</span>,
+   <span class="o">{</span>
+      <span class="s2">"requestId"</span>:3,
+      <span class="s2">"statusCode"</span>:200,
+      <span class="s2">"headers"</span>:[
+         <span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+            <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+         <span class="o">}</span>
+      <span class="o">]</span>,
+      <span class="s2">"body"</span>:<span class="s2">"{</span><span class="se">\"</span><span class="s2">officeId</span><span class="se">\"</span><span class="s2">:1,</span><span class="se">\"</span><span class="s2">clientId</span><span class="se">\"</span><span class="s2">:909,</span><span class="se">\"</span><span class="s2">loanId</span><span class="se">\"</span><span class="s2">:212,</span><span class="se">\"</span><span class="s2">resourceId</span><span class="se">\"</span><span class="s2">:155}"</span>
+   <span class="o">}</span>,
+   <span class="o">{</span>
+      <span class="s2">"requestId"</span>:4,
+      <span class="s2">"statusCode"</span>:200,
+      <span class="s2">"headers"</span>:[
+         <span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+            <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+         <span class="o">}</span>
+      <span class="o">]</span>,
+      <span class="s2">"body"</span>:<span class="s2">"[
+       {
+          </span><span class="se">\"</span><span class="s2">id</span><span class="se">\"</span><span class="s2">:155,
+          </span><span class="se">\"</span><span class="s2">chargeId</span><span class="se">\"</span><span class="s2">:2,
+          </span><span class="se">\"</span><span class="s2">name</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">Charge_Loans_GEQJC5</span><span class="se">\"</span><span class="s2">,
+          </span><span class="se">\"</span><span class="s2">chargeTimeType</span><span class="se">\"</span><span class="s2">:{
+             </span><span class="se">\"</span><span class="s2">id</span><span class="se">\"</span><span class="s2">:1,
+             </span><span class="se">\"</span><span class="s2">code</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">chargeTimeType.disbursement</span><span class="se">\"</span><span class="s2">,
+             </span><span class="se">\"</span><span class="s2">value</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">Disbursement</span><span class="se">\"</span><span class="s2">
+          },
+          </span><span class="se">\"</span><span class="s2">chargeCalculationType</span><span class="se">\"</span><span class="s2">:{
+             </span><span class="se">\"</span><span class="s2">id</span><span class="se">\"</span><span class="s2">:2,
+             </span><span class="se">\"</span><span class="s2">code</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">chargeCalculationType.percent.of.amount</span><span class="se">\"</span><span class="s2">,
+             </span><span class="se">\"</span><span class="s2">value</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">% Amount</span><span class="se">\"</span><span class="s2">
+          },
+          </span><span class="se">\"</span><span class="s2">percentage</span><span class="se">\"</span><span class="s2">:100.000000,
+          </span><span class="se">\"</span><span class="s2">amountPercentageAppliedTo</span><span class="se">\"</span><span class="s2">:10000.000000,
+          </span><span class="se">\"</span><span class="s2">currency</span><span class="se">\"</span><span class="s2">:{
+             </span><span class="se">\"</span><span class="s2">code</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">USD</span><span class="se">\"</span><span class="s2">,
+             </span><span class="se">\"</span><span class="s2">name</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">USDollar</span><span class="se">\"</span><span class="s2">,
+             </span><span class="se">\"</span><span class="s2">decimalPlaces</span><span class="se">\"</span><span class="s2">:2,
+             </span><span class="se">\"</span><span class="s2">displaySymbol</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"\$\"</span><span class="s2">,
+             </span><span class="se">\"</span><span class="s2">nameCode</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">currency.USD</span><span class="se">\"</span><span class="s2">,
+             </span><span class="se">\"</span><span class="s2">displayLabel</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">US Dollar </span><span class="se">\$\"</span><span class="s2">
+          },
+          </span><span class="se">\"</span><span class="s2">amount</span><span class="se">\"</span><span class="s2">:10000.000000,
+          </span><span class="se">\"</span><span class="s2">amountPaid</span><span class="se">\"</span><span class="s2">:0,
+          </span><span class="se">\"</span><span class="s2">amountWaived</span><span class="se">\"</span><span class="s2">:0,
+          </span><span class="se">\"</span><span class="s2">amountWrittenOff</span><span class="se">\"</span><span class="s2">:0,
+          </span><span class="se">\"</span><span class="s2">amountOutstanding</span><span class="se">\"</span><span class="s2">:10000.000000,
+          </span><span class="se">\"</span><span class="s2">amountOrPercentage</span><span class="se">\"</span><span class="s2">:100.000000,
+          </span><span class="se">\"</span><span class="s2">penalty</span><span class="se">\"</span><span class="s2">:false,
+          </span><span class="se">\"</span><span class="s2">chargePaymentMode</span><span class="se">\"</span><span class="s2">:{
+             </span><span class="se">\"</span><span class="s2">id</span><span class="se">\"</span><span class="s2">:0,
+             </span><span class="se">\"</span><span class="s2">code</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">chargepaymentmode.regular</span><span class="se">\"</span><span class="s2">,
+             </span><span class="se">\"</span><span class="s2">value</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">Regular</span><span class="se">\"</span><span class="s2">
+          },
+          </span><span class="se">\"</span><span class="s2">paid</span><span class="se">\"</span><span class="s2">:false,
+          </span><span class="se">\"</span><span class="s2">waived</span><span class="se">\"</span><span class="s2">:false,
+          </span><span class="se">\"</span><span class="s2">chargePayable</span><span class="se">\"</span><span class="s2">:false
+       }
+    ]"</span>
+   <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://DomainName/api/v1/batches</code></p>
+
+<p>The Mifos X Batch API enables a consumer to access significant amounts of data in a single call or to make changes to several objects at once. Batching allows a consumer to pass instructions for several operations in a single HTTP request. A consumer can also specify dependencies between related operations. Once all operations have been completed, a consolidated response will be passed back and the HTTP connection will be closed.</p>
+
+<p>The Batch API takes in an array of logical HTTP requests represented as JSON arrays - each request has a requestId (the id of a request used to specify the sequence and as a dependency between requests), a method (corresponding to HTTP method GET/PUT/POST/DELETE etc.), a relativeUrl (the portion of the URL after https://example.org/api/v2/), optional headers array (corresponding to HTTP headers), optional reference parameter if a request is dependent on another request and an optional body (for POST and PUT requests). The Batch API returns an array of logical HTTP responses represented as JSON arrays - each response has a requestId, a status code, an optional headers array and an optional body (which is a JSON encoded string).</p>
+
+<p>Batch API uses Json Path to handle dependent parameters. For example, if request &#39;2&rsquo; is referencing request &#39;1&rsquo; and in the &ldquo;body&rdquo; or in &ldquo;relativeUrl&rdquo; of request &#39;2&rsquo;, there is a dependent parameter (which will look like &ldquo;$.parameter_name&rdquo;), then Batch API will internally substitute this dependent parameter from the response body of request &#39;1&rsquo;.</p>
+
+<p>Batch API is able to handle deeply nested dependent requests as well nested parameters. As shown in the example, requests are dependent on each other as, 1&lt;&ndash;2&lt;&ndash;6, i.e a nested dependency, where request &#39;6&rsquo; is not directly dependent on request &#39;1&rsquo; but still it is one of the nested child of request &#39;1&rsquo;. In the same way Batch API could handle a deeply nested dependent value, such as {..[..{..,$.parameter_name,..}..]}.</p>
+
+<h2 id="batch-requests-in-a-single-transaction">Batch requests in a single transaction</h2>
+
+<blockquote>
+<p>Example Request Payload</p>
+</blockquote>
+<pre><code class="highlight shell"><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"requestId"</span>:1,
+    <span class="s2">"relativeUrl"</span>:<span class="s2">"clients"</span>,
+    <span class="s2">"method"</span>:<span class="s2">"POST"</span>,
+    <span class="s2">"headers"</span>:[
+      <span class="o">{</span>
+        <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+        <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+      <span class="o">}</span>,
+      <span class="o">{</span>
+        <span class="s2">"name"</span>:<span class="s2">"X-Mifos-Platform-TenantId"</span>,
+        <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+      <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"body"</span>:<span class="s2">"{
+         </span><span class="se">\"</span><span class="s2">officeId</span><span class="se">\"</span><span class="s2">: 1,
+         </span><span class="se">\"</span><span class="s2">firstname</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">Petra</span><span class="se">\"</span><span class="s2">,
+         </span><span class="se">\"</span><span class="s2">lastname</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">Yton</span><span class="se">\"</span><span class="s2">,
+         </span><span class="se">\"</span><span class="s2">externalId</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">externalId_4</span><span class="se">\"</span><span class="s2">,
+         </span><span class="se">\"</span><span class="s2">dateFormat</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">dd MMMM yyyy</span><span class="se">\"</span><span class="s2">,
+         </span><span class="se">\"</span><span class="s2">locale</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">en</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">active</span><span class="se">\"</span><span class="s2">: true,
+         </span><span class="se">\"</span><span class="s2">activationDate</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">04 March 2009</span><span class="se">\"</span><span class="s2">,
+         </span><span class="se">\"</span><span class="s2">submittedOnDate</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">04 March 2009</span><span class="se">\"</span><span class="s2">
+         }"</span>
+  <span class="o">}</span>,
+  <span class="o">{</span>
+    <span class="s2">"requestId"</span>:2,
+    <span class="s2">"relativeUrl"</span>:<span class="s2">"savingsaccounts"</span>,
+    <span class="s2">"method"</span>:<span class="s2">"POST"</span>,
+    <span class="s2">"reference"</span>:1,
+    <span class="s2">"headers"</span>:[
+      <span class="o">{</span>
+        <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+        <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+      <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"body"</span>:<span class="s2">"{
+              </span><span class="se">\"</span><span class="s2">clientId</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="nv">$.</span><span class="s2">clientId</span><span class="se">\"</span><span class="s2">,
+              </span><span class="se">\"</span><span class="s2">productId</span><span class="se">\"</span><span class="s2">: 1,
+              </span><span class="se">\"</span><span class="s2">locale</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">en</span><span class="se">\"</span><span class="s2">,
+              </span><span class="se">\"</span><span class="s2">dateFormat</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">dd MMMM yyyy</span><span class="se">\"</span><span class="s2">,
+              </span><span class="se">\"</span><span class="s2">submittedOnDate</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">01 March 2011</span><span class="se">\"</span><span class="s2">
+            }"</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre><code class="highlight shell"><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"requestId"</span>:1,
+    <span class="s2">"statusCode"</span>:200,
+    <span class="s2">"headers"</span>:[
+      <span class="o">{</span>
+        <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+        <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+      <span class="o">}</span>,
+      <span class="o">{</span>
+        <span class="s2">"name"</span>:<span class="s2">"X-Mifos-Platform-TenantId"</span>,
+        <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+      <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"body"</span>:<span class="s2">"{</span><span class="se">\"</span><span class="s2">officeId</span><span class="se">\"</span><span class="s2">:1,</span><span class="se">\"</span><span class="s2">clientId</span><span class="se">\"</span><span class="s2">:922,</span><span class="se">\"</span><span class="s2">resourceId</span><span class="se">\"</span><span class="s2">:922}"</span>
+  <span class="o">}</span>,
+  <span class="o">{</span>
+    <span class="s2">"requestId"</span>:2,
+    <span class="s2">"statusCode"</span>:200,
+    <span class="s2">"headers"</span>:[
+      <span class="o">{</span>
+        <span class="s2">"name"</span>:<span class="s2">"Content-type"</span>,
+        <span class="s2">"value"</span>:<span class="s2">"text/html"</span>
+      <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"body"</span>:<span class="s2">"{</span><span class="se">\"</span><span class="s2">officeId</span><span class="se">\"</span><span class="s2">:1,</span><span class="se">\"</span><span class="s2">clientId</span><span class="se">\"</span><span class="s2">:922,</span><span class="se">\"</span><span class="s2">savingsId</span><span class="se">\"</span><span class="s2">:116,</span><span class="se">\"</span><span class="s2">resourceId</span><span class="se">\"</span><span class="s2">:116}"</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+
+<p>The Mifos X Batch API is also capable of executing all the requests in a single transaction, by setting a Query Parameter, &ldquo;enclosingTransaction=true&rdquo;. So, if one or more of the requests in a batch returns an erroneous response all of the Data base transactions made by other successful requests will be rolled back.</p>
+
+<p>If there has been a rollback in a transaction then a single response will be provided, with a &#39;400&rsquo; status code and a body consisting of the error details of the first failed request.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://DomainName/api/v1/batches?enclosingTransaction=true</code></p>
+
+<h2 id="batch-api-errors">Batch API Errors</h2>
+
+<p>In Batch API without &ldquo;enclosingTransaction=true&rdquo;, if one of the response is erroneous, then an appropriate status code will be set for that request and the error message will be returned in it&rsquo;s &ldquo;body&rdquo;, while all other requests will return successful response with a status code of &ldquo;200&rdquo;.</p>
+
+<h2 id="available-command-strategies">Available Command Strategies</h2>
+
+<p>These are the currently available command strategies within the Mifos Batch API. So, these listed operations can be executed using a Batch Request.</p>
+
+<p><strong>Batch API - available commands</strong></p>
+
+<ul>
+<li><a href="https://demo.openmf.org/api-docs/apiLive.htm#clients_create">Create a new Client</a></li>
+<li><a href="https://demo.openmf.org/api-docs/apiLive.htm#clients_update">Update an existing Client</a></li>
+<li><a href="https://demo.openmf.org/api-docs/apiLive.htm#loans_create">Apply a Loan to a Client</a></li>
+<li><a href="https://demo.openmf.org/api-docs/apiLive.htm#savingsaccounts_create">Apply Savings to a Client</a></li>
+<li><a href="https://demo.openmf.org/api-docs/apiLive.htm#loans_charges_create">Add a new Loan Charge</a></li>
+<li><a href="https://demo.openmf.org/api-docs/apiLive.htm#loans_charges_retrieve">Collect an existing Loan Charge</a></li>
+<li><a href="https://demo.openmf.org/api-docs/apiLive.htm#clients_activate">Activate a Pending Client</a></li>
+<li><a href="https://demo.openmf.org/api-docs/apiLive.htm#loans_approve">Approve a Pending Loan</a></li>
+<li><a href="https://demo.openmf.org/api-docs/apiLive.htm#loans_disburse">Disburse a Loan</a></li>
+</ul>
+
+          <h1 id="errors">Errors</h1>
+
+<blockquote>
+<p>Example Response</p>
+
+<p>Error Message returned when attempting to create an Office without passing any parameters</p>
+</blockquote>
+<pre><code class="highlight shell"><span class="o">{</span>
+<span class="s2">"developerMessage"</span>: <span class="s2">"The request was invalid. This typically will happen due to validation errors which are provided."</span>,
+<span class="s2">"developerDocLink"</span>: <span class="s2">"https://github.com/openMF/mifosx/wiki/HTTP-API-Error-codes"</span>,
+<span class="s2">"httpStatusCode"</span>: <span class="s2">"400"</span>,
+<span class="s2">"defaultUserMessage"</span>: <span class="s2">"Validation errors exist."</span>,
+<span class="s2">"userMessageGlobalisationCode"</span>: <span class="s2">"validation.msg.validation.errors.exist"</span>,
+<span class="s2">"errors"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+    <span class="s2">"developerMessage"</span>: <span class="s2">"The parameter name cannot be blank."</span>,
+    <span class="s2">"defaultUserMessage"</span>: <span class="s2">"The parameter name cannot be blank."</span>,
+    <span class="s2">"userMessageGlobalisationCode"</span>: <span class="s2">"validation.msg.office.name.cannot.be.blank"</span>,
+    <span class="s2">"parameterName"</span>: <span class="s2">"name"</span>,
+    <span class="s2">"value"</span>: null,
+    <span class="s2">"args"</span>: <span class="o">[]</span>
+    <span class="o">}</span>,
+    <span class="o">{</span>
+    <span class="s2">"developerMessage"</span>: <span class="s2">"The parameter openingDate cannot be blank."</span>,
+    <span class="s2">"defaultUserMessage"</span>: <span class="s2">"The parameter openingDate cannot be blank."</span>,
+    <span class="s2">"userMessageGlobalisationCode"</span>: <span class="s2">"validation.msg.office.openingDate.cannot.be.blank"</span>,
+    <span class="s2">"parameterName"</span>: <span class="s2">"openingDate"</span>, <span class="s2">"value"</span>: null, <span class="s2">"args"</span>: <span class="o">[]</span>
+    <span class="o">}</span>,
+    <span class="o">{</span>
+    <span class="s2">"developerMessage"</span>: <span class="s2">"The parameter parentId cannot be blank."</span>,
+    <span class="s2">"defaultUserMessage"</span>: <span class="s2">"The parameter parentId cannot be blank."</span>,
+    <span class="s2">"userMessageGlobalisationCode"</span>:
+    <span class="s2">"validation.msg.office.parentId.cannot.be.blank"</span>, <span class="s2">"parameterName"</span>:
+    <span class="s2">"parentId"</span>, <span class="s2">"value"</span>: null, <span class="s2">"args"</span>: <span class="o">[]</span>
+    <span class="o">}</span>
+<span class="o">]</span>
+<span class="o">}</span>
+</code></pre>
+
+<p>All errors are returned in JSON.</p>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>200</td>
+<td>OK &ndash; Everything Worked.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request &ndash; Invalid Parameter or Data Integrity Issue.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized &ndash; Your Authorization Token is invalid</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden &ndash; You don&rsquo;t have access to this resource</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found &ndash; The specified resource could not be found</td>
+</tr>
+<tr>
+<td>405</td>
+<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service Unavailable &ndash; We&rsquo;re temporarily offline for maintenance. Please try again later.</td>
+</tr>
+</tbody></table>
+
+          <h1 id="user">User</h1>
+
+<p>An API capability to support administration of application users.</p>
+
+<h2 id="verify-authentication">Verify authentication</h2>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mifos"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"base64EncodedAuthenticationKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bWlmb3M6cGFzc3dvcmQ="</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"authenticated"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"officeId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"officeName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Head Office"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super user"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This role provides all application permissions."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"ALL_FUNCTIONS"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Authenticates the credentials provided and returns the set roles and permissions allowed.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://DomainName/api/v1/authentication</code></p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>username</td>
+<td>mifos</td>
+<td>Username to LogIn to Mifos instance</td>
+</tr>
+<tr>
+<td>password</td>
+<td>password</td>
+<td>Password to LogIn to Mifos instance</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-user">Create a User</h2>
+<pre><code class="highlight shell">curl <span class="s2">"https://DomainName/api/v1/users"</span>
+  -X POST
+  -H <span class="s2">"Authorization: Basic meowmeowmeow"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -H <span class="s2">"Accept: application/json"</span>
+  -d <span class="s2">"{
+    "</span>username<span class="s2">": "</span>newuser<span class="s2">",
+    "</span>firstname<span class="s2">": "</span>Test<span class="s2">",
+    "</span>lastname<span class="s2">": "</span>User<span class="s2">",
+    "</span>email<span class="s2">": "</span>whatever@mifos.org<span class="s2">",
+    "</span>officeId<span class="s2">": 1,
+    "</span>staffId<span class="s2">": 1,
+    "</span>roles<span class="s2">": [2,3],
+    "</span>sendPasswordToEmail<span class="s2">": true
+}
+"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newuser"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"whatever@mifos.org"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"officeId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"staffId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"sendPasswordToEmail"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Adds new application user.</p>
+
+<p>Note: Password information is not required (or processed). Password details at present are auto-generated and then sent to the email account given (which is why it can take a few seconds to complete).</p>
+
+<p>Mandatory Fields
+username, firstname, lastname, email, officeId, roles, sendPasswordToEmail</p>
+
+<p>Optional Fields
+staffId,passwordNeverExpires</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://DomainName/api/v1/users</code></p>
+
+<h2 id="retrieve-list-of-users">Retrieve list of users</h2>
+
+<p><code class="prettyprint">GET https://DomainName/api/v1/users</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mifos"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"officeId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"officeName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Head Office"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"App"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Administrator"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demomfi@mifos.org"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"passwordNeverExpires"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"staff"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+           </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123, Test"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"mobileNo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12312312"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"officeId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"officeName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Head Office"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"isLoanOfficer"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"isActive"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="s2">"selectedRoles"</span><span class="err">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super user"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This role provides all application permissions."</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>Example Requests:</p>
+
+<p>users</p>
+
+<p>users?fields=id,username,email,officeName</p>
+
+<h2 id="retrieve-a-user">Retrieve a User</h2>
+
+<p><code class="prettyprint">GET https://DomainName/api/v1/users/{userId}</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mifos"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"officeId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"officeName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Head Office"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"App"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Administrator"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demomfi@mifos.org"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"passwordNeverExpires"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"staff"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123, Test"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"mobileNo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12312312"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"officeId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"officeName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Head Office"</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"isLoanOfficer"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+     </span><span class="s2">"isActive"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="s2">"availableRoles"</span><span class="err">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"selectedRoles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super user"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This role provides all application permissions."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Example Requests:</p>
+
+<p>users/1</p>
+
+<p>users/1?template=true</p>
+
+<p>users/1?fields=username,officeName</p>
+
+<h2 id="update-a-user">Update a User</h2>
+
+<p><code class="prettyprint">PUT https://DomainName/api/v1/users/{userId)</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"officeId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"changes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"passwordEncoded"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc3326b1bb376351c7baeb4175f5e0504e33aadf6a158474a6d71de1befae51"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Note: When updating a password you must provide the repeatPassword parameter also.</p>
+
+<h2 id="delete-a-user">Delete a User</h2>
+
+<p><code class="prettyprint">DELETE https://DomainName/api/v1/users/{userId}</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"officeId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"changes"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>&ldquo;</p>
+
+<h1 id="roles">Roles</h1>
+
+<p>An API capability to support management of application roles for user administration.</p>
+
+<h2 id="list-roles">List Roles</h2>
+
+<p><code class="prettyprint">GET https://DomainName/api/v1/roles</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super user"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This role provides all application permissions."</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>Example Requests:</p>
+
+<p>roles</p>
+
+<p>roles?fields=name</p>
+
+<h2 id="delete-a-role">Delete a Role</h2>
+
+<p><code class="prettyprint">DELETE https://DomainName/api/v1/roles/{roleId}</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Description : Delete the role in case role is not associated with any users.</p>
+
+<h2 id="retrieve-a-role">Retrieve a Role</h2>
+
+<p><code class="prettyprint">GET https://DomainName/api/v1/roles/{roleId}</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super user"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This role provides all application permissions."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Example Requests:</p>
+
+<p>roles/1</p>
+
+<p>roles/1?fields=name</p>
+
+<h2 id="create-a-new-role">Create a New Role</h2>
+
+<p><code class="prettyprint">POST https://DomainName/api/v1/roles/{roleId}</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Mandatory Fields
+name, description</p>
+
+<h2 id="update-a-role">Update a Role</h2>
+
+<p><code class="prettyprint">PUT https://DomainName/api/v1/roles/{roleId}</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"changes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some description(changed)"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h2 id="retrieve-a-role&#39;s-permissions">Retrieve a Role&rsquo;s Permissions</h2>
+
+<p><code class="prettyprint">GET https://DomainName/api/v1/roles/{roleId}/permissions</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super user"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This role provides all application permissions."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"permissionUsageData"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"grouping"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authorisation"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"READ_PERMISSION"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"entityName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PERMISSION"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"actionName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"READ"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"selected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"grouping"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transaction_loan"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WRITEOFF_LOAN_CHECKER"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"entityName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LOAN"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"actionName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WRITEOFF"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"selected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Example Requests:</p>
+
+<p>roles/1/permissions</p>
+
+<h2 id="enable-role">Enable Role</h2>
+
+<p><code class="prettyprint">POST https://DomainName/api/v1/roles/{roleId}?command=enable</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Description : Enable role in case role is disabled.</p>
+
+<h2 id="disable-role">Disable Role</h2>
+
+<p><code class="prettyprint">POST https://DomainName/api/v1/roles/{roleId}?command=disable</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Description : Disable the role in case role is not associated with any users.</p>
+
+<h2 id="update-a-role&#39;s-permissions">Update a Role&rsquo;s Permissions</h2>
+
+<p><code class="prettyprint">PUT https://DomainName/api/v1/roles/{roleId}/permissions</code></p>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"changes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"ALL_FUNCTIONS_READ"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+          <h1 id="report">Report</h1>
+
+<h2 id="retrieve-report-template">Retrieve Report Template</h2>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"allowedReportTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"Table"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Pentaho"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Chart"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"allowedReportSubTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"Bar"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Pie"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"allowedParameters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"startDateSelect"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"endDateSelect"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"obligDateTypeSelect"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OfficeIdSelectOne"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"loanOfficerIdSelectAll"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"currencyIdSelectAll"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fundIdSelectAll"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"loanProductIdSelectAll"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"loanPurposeIdSelectAll"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"parTypeSelect"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This is a convenience resource. It can be useful when building maintenance user interface screens for client applications. The template data returned consists of any or all of:</p>
+
+<ul>
+<li>Field Defaults</li>
+<li>Allowed Value Lists</li>
+</ul>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://DomainName/api/v1/reports/template</code></p>
+
+<p>&ldquo;</p>
+
+<h2 id="create-a-report">Create a Report</h2>
+<pre><code class="highlight shell">curl <span class="s2">"https://DomainName/api/v1/reports/template"</span>
+  -X POST
+  -H <span class="s2">"Authorization: Basic meowmeowmeow"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -H <span class="s2">"Accept: application/json"</span>
+  -d <span class="s2">"{
+ "</span>reportName<span class="s2">":"</span>Completely New Report<span class="s2">",
+ "</span>reportType<span class="s2">":"</span>Table<span class="s2">",
+ "</span>reportSubType<span class="s2">":"",
+ "</span>reportCategory<span class="s2">":"</span>Loan<span class="s2">",
+ "</span>useReport<span class="s2">":"</span><span class="nb">false</span><span class="s2">",
+ "</span>description<span class="s2">":"</span>Just<span class="se">\n</span>An<span class="se">\n</span>Example<span class="s2">",
+ "</span>reportSql<span class="s2">":"</span><span class="k">select</span> <span class="s1">'very good sql'</span> as AComment<span class="s2">",
+ "</span>reportParameters<span class="s2">":[{"</span>id<span class="s2">":"","</span>parameterId<span class="s2">":"</span>5<span class="s2">","</span>reportParameterName<span class="s2">":""},{"</span>id<span class="s2">":"","</span>parameterId<span class="s2">":"</span>6<span class="s2">","</span>reportParameterName<span class="s2">":""}]
+}
+"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="w"> </span><span class="mi">132</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://DomainName/api/v1/report</code></p>
+
+<p>&rdquo;</p>
+
+<h2 id="list-report">List Report</h2>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reportName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Client Listing"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reportType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Table"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reportCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Individual Client Report\r\n\r\nLists the small number of defined fields on the client table.  Would expect to copy this \n\nreport and add any \u0027one to one\u0027 additional data for specific tenant needs.\r\n\r\nCan be run for any size MFI but you\u0027d expect it only to be run within a branch for \n\nlarger ones.  Depending on how many columns are displayed, there is probably is a limit of about 20/50k clients returned for html display (export to excel doesn\u0027t \n\nhave that client browser/memory impact)."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"coreReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"useReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reportParameters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterId"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OfficeIdSelectOne"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reportName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Client Loans Listing"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reportType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Table"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reportCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Client"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Individual Client Report\n\nPretty \n\nwide report that lists the basic details of client loans.  \n\nCan be run for any size MFI but you\u0027d expect it only to be run within a branch for larger ones.  \n\nThere is probably is a limit of about 20/50k clients returned for html display (export to excel doesn\u0027t have that client browser/memory impact)."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"coreReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"useReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reportParameters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterId"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OfficeIdSelectOne"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterId"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"loanOfficerIdSelectAll"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"currencyIdSelectAll"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterId"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fundIdSelectAll"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterId"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"loanProductIdSelectAll"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterId"</span><span class="p">:</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"loanPurposeIdSelectAll"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://DomainName/api/v1/reports</code></p>
+
+<p>&ldquo;</p>
+
+<h2 id="retrieve-a-report">Retrieve a report</h2>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"reportName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Client Listing"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"reportType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Table"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"reportCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Client"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Individual Client Report\r\n\r\nLists the small number of defined fields on the client table.  Would expect to copy this \n\nreport and add any \u0027one to one\u0027 additional data for specific tenant needs.\r\n\r\nCan be run for any size MFI but you\u0027d expect it only to be run within a branch for \n\nlarger ones.  Depending on how many columns are displayed, there is probably is a limit of about 20/50k clients returned for html display (export to excel doesn\u0027t \n\nhave that client browser/memory impact)."</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"reportSql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"select \nconcat(repeat(\"..\",   \n   ((LENGTH(ounder.`hierarchy`) - LENGTH(REPLACE(ounder.`hierarchy`, \u0027.\u0027, \u0027\u0027)) - 1))), ounder.`name`) as \"Office/Branch\",\n c.account_no as \"Client Account No.\",  \nc.display_name as \"Name\",  \nr.enum_message_property as \"Status\",\nc.activation_date as \"Activation\", c.external_id as \"External Id\"\nfrom m_office o \njoin m_office ounder on ounder.hierarchy like concat(o.hierarchy, \u0027%\u0027)\nand ounder.hierarchy like concat(\u0027${currentUserHierarchy}\u0027, \u0027%\u0027)\njoin m_client c on c.office_id \u003d ounder.id\nleft join r_enum_value r on r.enum_name \u003d \u0027status_enum\u0027 and r.enum_id \u003d c.status_enum\nwhere o.id \u003d ${officeId}\norder by ounder.hierarchy, c.account_no"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"coreReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"useReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"reportParameters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterId"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"parameterName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OfficeIdSelectOne"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://DomainName/api/v1/reports/</code></p>
+
+          <h1 id="client">Client</h1>
+
+<h2 id="retrieve-client-details-template">Retrieve Client Details Template</h2>
+<pre><code class="highlight shell">curl <span class="s2">"https://DomainName/api/v1/clients/template"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+    </span><span class="s2">"activationDate"</span><span class="p">:[</span><span class="mi">2014</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"officeId"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"officeOptions"</span><span class="p">:[{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Head Office"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"nameDecorated"</span><span class="p">:</span><span class="s2">"Head Office"</span><span class="w">
+    </span><span class="p">}],</span><span class="w">
+    </span><span class="s2">"staffOptions"</span><span class="p">:[{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"firstname"</span><span class="p">:</span><span class="s2">"xyz"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"lastname"</span><span class="p">:</span><span class="s2">"sjs"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"displayName"</span><span class="p">:</span><span class="s2">"sjs, xyz"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"officeId"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"officeName"</span><span class="p">:</span><span class="s2">"Head Office"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"isLoanOfficer"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"isActive"</span><span class="p">:</span><span class="kc">true</span><span class="w">
+    </span><span class="p">}],</span><span class="w">
+    </span><span class="s2">"savingProductOptions"</span><span class="p">:[{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"account overdraft"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"withdrawalFeeForTransfers"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"allowOverdraft"</span><span class="p">:</span><span class="kc">false</span><span class="w">
+    </span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This is a convenience resource. It can be useful when building maintenance user interface screens for client applications. The template data returned consists of any or all of:</p>
+
+<ul>
+<li>Field Defaults</li>
+<li>Allowed Value Lists</li>
+</ul>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://DomainName/api/v1/clients/template</code></p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<p><strong>ARGUMENTS</strong></p>
+
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>officeId:</strong></td>
+<td><strong>Integer</strong> <em>optional</em></td>
+</tr>
+<tr>
+<td><strong>staffInSelectedOfficeOnly:</strong></td>
+<td><strong>Boolean</strong> <em>optional</em>  Defaults to false if not provided. If staffInSelectedOfficeOnly=true only staff who are associated with the selected branch are returned.</td>
+</tr>
+<tr>
+<td><strong>commandParam:</strong></td>
+<td><strong>String</strong> <em>optional</em> If commandParam=close retrieves all closureReasons which are associated with &ldquo;ClientClosureReason&rdquo; value.</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-client">Create a Client</h2>
+<pre><code class="highlight shell">curl <span class="s2">"https://DomainName/api/v1/clients"</span>
+  -X POST
+  -H <span class="s2">"Authorization: Basic meowmeowmeow"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -H <span class="s2">"Accept: application/json"</span>
+  -d <span class="s2">"{
+    "</span>officeId<span class="s2">": 1,
+    "</span>firstname<span class="s2">": "</span>Petra<span class="s2">",
+    "</span>lastname<span class="s2">": "</span>Yton<span class="s2">",
+    "</span>externalId<span class="s2">": "</span>786YYH7<span class="s2">",
+    "</span>dateFormat<span class="s2">": "</span>dd MMMM yyyy<span class="s2">",
+    "</span>locale<span class="s2">": "</span>en<span class="s2">",
+    "</span>active<span class="s2">": true,
+    "</span>activationDate<span class="s2">": "</span>04 March 2009<span class="s2">",
+    "</span>submittedOnDate<span class="s2">":"</span>04 March 2009<span class="s2">",
+    "</span>savingsProductId<span class="s2">" : 4
+}"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isis"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p><strong>Note:</strong> You can enter either:<br>
+firstname/middlename/lastname - for a person (middlename is optional) OR<br>
+fullname - for a business or organisation (or person known by one name).</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://DomainName/api/v1/clients</code>  </p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th><strong>Mandatory Fields</strong></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>firstname and lastname OR fullname</td>
+</tr>
+<tr>
+<td>officeId</td>
+</tr>
+<tr>
+<td>active=true</td>
+</tr>
+<tr>
+<td>activationDate</td>
+</tr>
+<tr>
+<td>active=false</td>
+</tr>
+</tbody></table>
+
+<table><thead>
+<tr>
+<th><strong>Mandatory Fields</strong></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>groupId</td>
+</tr>
+<tr>
+<td>externalId</td>
+</tr>
+<tr>
+<td>accountNo</td>
+</tr>
+<tr>
+<td>staffId</td>
+</tr>
+<tr>
+<td>mobileNo</td>
+</tr>
+<tr>
+<td>savingsProductId</td>
+</tr>
+<tr>
+<td>genderId</td>
+</tr>
+<tr>
+<td>clientTypeId</td>
+</tr>
+<tr>
+<td>clientClassificationId</td>
+</tr>
+</tbody></table>
+
+<h2 id="activate-a-client">Activate a Client</h2>
+<pre><code class="highlight shell">curl <span class="s2">"https://DomainName/api/v1/clients/{clientId}?command=activate"</span>
+  -X POST
+  -H <span class="s2">"Authorization: Basic meowmeowmeow"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -H <span class="s2">"Accept: application/json"</span>
+  -d <span class="s2">"Request Body:
+{
+  "</span>locale<span class="s2">": "</span>en<span class="s2">",
+  "</span>dateFormat<span class="s2">": "</span>dd MMMM yyyy<span class="s2">",
+  "</span>activationDate<span class="s2">": "</span>01 March 2011<span class="s2">"
+}"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"officeId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"resourceId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Clients can be created in a Pending state. This API exists to enable client activation (for when a client becomes an approved member of the financial Institution).</p>
+
+<p>If the client happens to be already active this API will result in an error.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://Domain Name/api/v1/clients/{clientId}?command=activate</code></p>
+
+          
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="shell">shell</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
